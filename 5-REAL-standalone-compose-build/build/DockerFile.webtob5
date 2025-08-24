@@ -1,0 +1,26 @@
+FROM rockylinux93:base
+
+ENV USER_HOME=youOSuser_HOME
+ENV WEBTOBDIR=your_WEBTOB_HOME
+ENV WEBTOB_LOG_HOME=your_WEBTOB_LOG_HOME
+ENV DOCROOT=your_DOCROOT
+ENV PATH=${PATH}:${WEBTOBDIR}/bin
+
+COPY --chown=kior:kior env/.bash_profile env/.bashrc ${USER_HOME}/
+
+COPY --chown=kior:kior webtob/        ${WEBTOBDIR}/
+COPY --chown=kior:kior env/docs/      ${WEBTOBDIR}/docs/
+COPY --chown=kior:kior env/bin/       ${WEBTOBDIR}/bin/
+COPY --chown=kior:kior env/config/    ${WEBTOBDIR}/config/
+COPY --chown=kior:kior env/license/   ${WEBTOBDIR}/license/ 
+
+
+
+RUN find ${WEBTOBDIR} -type d -exec chmod 700 {} \; \
+ && find ${WEBTOBDIR} -type f -exec chmod 600 {} \; \
+ && chmod u+x ${WEBTOBDIR}/bin/*
+
+WORKDIR ${USER_HOME}
+USER kior
+
+ENTRYPOINT ["wboot.sh"]

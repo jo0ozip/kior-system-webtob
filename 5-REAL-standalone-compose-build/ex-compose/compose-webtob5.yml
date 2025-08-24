@@ -1,0 +1,23 @@
+services:
+  web01:
+    image: tmaxsoft-webtob:v5
+    pull_policy: always
+    container_name: webtob01
+    hostname: web01
+    entrypoint: ["/sw/webtob5/bin/wboot.sh"]
+    ports:
+      - "28080:8080"  # hostPort:containerPort
+    platform: linux/amd64
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpus: "2.0"
+    volumes:
+      - ./LOG/web01:/sw/webtob5/log:rw
+    networks:
+      - tmaxsoft-network
+    restart: unless-stopped
+
+networks:
+  tmaxsoft-network:
+    external: true
